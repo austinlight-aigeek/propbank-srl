@@ -1,0 +1,15 @@
+services:
+  postgres_srl:
+    image: postgres:latest
+    container_name: PostgresSRL
+    environment:
+      POSTGRES_DB: postgres-srl
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - "postgres_srl:/var/lib/postgresql/data"
+
+volumes:
+  postgres_srl:
