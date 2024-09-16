@@ -1,11 +1,12 @@
-CREATE TABLE IF NOT EXISTS SemanticRoleAnnotations (
-    annotation_id SERIAL PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS SRL_BASE (
+    annotation_id PRIMARY KEY,
     sentence_text TEXT NOT NULL,
-    lemma TEXT,
-    agent TEXT[],
-    theme TEXT[],
-    goal TEXT[],
-    beneficiary TEXT[],
-    entities_related_to_lemma TEXT[],
-    notes TEXT
+    agent TEXT[] DEFAULT '{}',
+    lemma TEXT[] DEFAULT '{}',
+    theme TEXT[] DEFAULT '{}',
+    goal TEXT[] DEFAULT '{}',
+    beneficiary TEXT[] DEFAULT '{}',
+    entities_related_to_lemma TEXT[] DEFAULT '{}',
+    notes TEXT DEFAULT '',
+    source TEXT DEFAULT ''
 );

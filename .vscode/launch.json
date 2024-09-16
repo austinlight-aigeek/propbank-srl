@@ -1,0 +1,17 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: Debug main.py",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/main.py", // Path to main.py
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}", // Set the working directory to the root of your project
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}" // Add the root directory to PYTHONPATH
+      },
+      "justMyCode": true
+    }
+  ]
+}
