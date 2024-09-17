@@ -67,8 +67,6 @@ def main():
     cur.close()
     conn.close()
 
-    print(f"{count} sentences were processed.")
-
 
 if __name__ == "__main__":
     main()
