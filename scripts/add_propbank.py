@@ -3,14 +3,13 @@ from psycopg2.extras import execute_values
 from data.propbank.propbank_parser import (
     parse_propbank_data,
 )  # Adjust the import path if necessary
-from config import DB_CONFIG
-from scripts.create_new_sentence_table import main as update_sentence_table
+from config import DB_CONFIG, TABLE_PROPBANK
 
 
 def insert_batch_to_db(conn, cursor, data_batch):
 
-    insert_query = """
-        INSERT INTO SRL_BASE (sentence_text, agent, lemma, theme, goal, beneficiary, entities_related_to_lemma, notes, source)
+    insert_query = f"""
+        INSERT INTO {TABLE_PROPBANK} (sentence_text, agent, lemma, theme, goal, beneficiary, entities_related_to_lemma, notes, source)
         VALUES %s
     """
 
@@ -61,7 +60,7 @@ def main():
         insert_batch_to_db(conn, cur, batch)
         count += len(batch)
 
-    print("=" * 20)
+    print("-" * 50)
     print(f"Total: {count} sentences were inserted.")
 
     # Close the database connection
@@ -72,4 +71,4 @@ def main():
 
 
 if __name__ == "__main__":
-    update_sentence_table()
+    main()

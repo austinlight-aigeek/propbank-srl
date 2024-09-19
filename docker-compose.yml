@@ -1,15 +1,13 @@
 services:
-  postgres_srl:
-    image: postgres:latest
-    container_name: PostgresSRL
-    environment:
-      POSTGRES_DB: postgres-srl
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+  pgvector:
+    image: pgvector/pgvector:pg16
     ports:
-      - "5432:5432"
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
     volumes:
-      - "postgres_srl:/var/lib/postgresql/data"
+      - pgvector_data:/var/lib/postgresql/data
 
 volumes:
-  postgres_srl:
+  pgvector_data:
