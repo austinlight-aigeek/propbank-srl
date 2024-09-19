@@ -28,16 +28,16 @@ def duplicate_table():
 
 def extract_semantic_entities(sentence: str) -> list[dict[str, str]]:
     if not sentence:
-        return None
+        return []
 
     doc = nlp(sentence)
-    semantic_entites = {
-        "agent": [],
-        "lemma": [],
-        "theme": [],
-        "goal": [],
-        "beneficiary": [],
-        "entities_related_to_lemma": [],
+    semantic_entities = {
+        "agent": set(),
+        "lemma": set(),
+        "theme": set(),
+        "goal": set(),
+        "beneficiary": set(),
+        "entities_related_to_lemma": set(),
     }
     for token in doc:
         if token.dep_ == "nsubj" and token.head.pos_ == "VERB":
@@ -70,54 +70,42 @@ def extract_semantic_entities(sentence: str) -> list[dict[str, str]]:
             ]
 
             # Add agent if not present
-            if agent not in semantic_entites["agent"]:
-                semantic_entites["agent"].append(agent.lower())
+            semantic_entities["agent"].add(agent.lower())
 
             # Add lemma if not present
-            if lemma not in semantic_entites["lemma"]:
-                semantic_entites["lemma"].append(lemma.lower())
+            semantic_entities["lemma"].add(lemma.lower())
 
             # Find prepositional phrases and extract relevant information
             for prep in prep_phrases:
                 prep_object = [
                     child.text for child in prep.children if child.dep_ == "pobj"
                 ]
-                if prep_object:
-                    # Add to goal if not present
-                    for po in prep_object:
-                        if po not in semantic_entites["goal"]:
-                            semantic_entites["goal"].append(po.lower())
+                # Add to goal if not present
+                for po in prep_object:
+                    semantic_entities["goal"].add(po.lower())
 
             # Add to theme if not present
-            if direct_objects:
-                for do in direct_objects:
-                    if do not in semantic_entites["theme"]:
-                        semantic_entites["theme"].append(do.lower())
+            for do in direct_objects:
+                semantic_entities["theme"].add(do.lower())
 
             # Add to beneficiary if not present
-            if indirect_objects:
-                for io in direct_objects:
-                    if io not in semantic_entites["beneficiary"]:
-                        semantic_entites["beneficiary"].append(io.lower())
+            for io in indirect_objects:
+                semantic_entities["beneficiary"].add(io.lower())
 
-            if other_entities:
-                new_other_entities = []
-                for other_entity in other_entities:
-                    if other_entity.text.lower() not in stopwords:
-                        if other_entity.pos_ == "VERB":
-                            new_other_entities.append(other_entity.lemma_)
-                        else:
-                            new_other_entities.append(other_entity.text)
+            new_other_entities = []
+            for other_entity in other_entities:
+                if other_entity.text.lower() not in stopwords:
+                    new_other_entities.append(
+                        other_entity.lemma_
+                        if other_entity.pos_ == "VERB"
+                        else other_entity.text
+                    )
 
-                # Add the ones if not present
-                if new_other_entities:
-                    for oe in new_other_entities:
-                        if oe not in semantic_entites["entities_related_to_lemma"]:
-                            semantic_entites["entities_related_to_lemma"].append(
-                                oe.lower()
-                            )
+            # Add the ones if not present
+            for oe in new_other_entities:
+                semantic_entities["entities_related_to_lemma"].add(oe.lower())
 
-    return [semantic_entites]
+    return [[{key: list(value) for key, value in semantic_entities.items()}]]
 
 
 def update_sentence_table():
